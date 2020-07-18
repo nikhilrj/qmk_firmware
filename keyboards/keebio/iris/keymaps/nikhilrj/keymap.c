@@ -113,18 +113,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {
+    if (IS_LAYER_ON(_LOWER)) {
         if (clockwise) {
             tap_code(KC_VOLU);
         } else {
             tap_code(KC_VOLD);
         }
     }
-    else if (index == 1) {
+    else {
         if (clockwise) {
-            tap_code(KC_PGDN);
+            tap_code16(C(KC_RGHT));
         } else {
-            tap_code(KC_PGUP);
+            tap_code16(C(KC_LEFT));
         }
     }
 }
