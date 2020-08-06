@@ -72,6 +72,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
+
+void keyboard_post_init_user(void) {
+    rgblight_enable(); // Enable RGB by default
+    rgblight_sethsv_cyan();  // Set it to CYAN by default
+    rgblight_mode(1); // set to solid by default
+}
+
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (IS_LAYER_ON(_FNC)) {
         if (clockwise) {
@@ -79,8 +86,8 @@ void encoder_update_user(uint8_t index, bool clockwise) {
         } else {
             tap_code(KC_VOLD);
         }
-    }
-    else if (IS_LAYER_ON(_MAC)) {
+    }    
+    else if(biton32(default_layer_state) == _MAC) {
         if (clockwise) {
             tap_code16(A(KC_RGHT));
         } else {
@@ -94,4 +101,27 @@ void encoder_update_user(uint8_t index, bool clockwise) {
             tap_code16(C(KC_LEFT));
         }
     }
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    if(get_highest_layer(state) == _FNC) {
+        rgblight_setrgb (RGB_GOLD);
+    }
+    else {
+        switch (biton32(default_layer_state)) {
+            case _GAMES:
+                rgblight_setrgb (RGB_RED);
+                break;
+            case _MAC:
+                rgblight_setrgb (RGB_AZURE);
+                break;
+            case _QWERTY:
+                rgblight_setrgb (RGB_MAGENTA);
+                break;
+            default: //  for any other layers, or the default layer
+                rgblight_setrgb (RGB_MAGENTA);
+                break;
+        }
+    } 
+  return state;
 }
